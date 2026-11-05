@@ -1,0 +1,62 @@
+; TEMPLATE ONLY. Render with scripts/Stage-DriverPackage.ps1 using a VM test altitude.
+[Version]
+Signature = "$WINDOWS NT$"
+Class = "SecurityEnhancer"
+ClassGuid = {D02BC3DA-0C8E-4945-9BD5-F1883C226C8C}
+Provider = %Provider%
+DriverVer = 11/04/2026,0.1.0.0
+CatalogFile = BdgDriver.cat
+PnpLockdown = 1
+
+[DestinationDirs]
+DriverFiles = 13
+
+[DefaultInstall.NTamd64]
+CopyFiles = DriverFiles
+[DefaultInstall.NTamd64.Services]
+AddService = BdgDriver,,ServiceLegacy
+[DefaultInstall.NTamd64.10.0...26100]
+CopyFiles = DriverFiles
+[DefaultInstall.NTamd64.10.0...26100.Services]
+AddService = BdgDriver,,Service24H2
+
+[DriverFiles]
+BdgDriver.sys
+[SourceDisksFiles]
+BdgDriver.sys = 1
+[SourceDisksNames]
+1 = %Disk%,,,
+
+[ServiceLegacy]
+DisplayName = %Description%
+ServiceBinary = %13%\BdgDriver.sys
+ServiceType = 2
+StartType = 3
+ErrorControl = 1
+LoadOrderGroup = "FSFilter Security Enhancer"
+Dependencies = FltMgr
+AddReg = InstancesLegacy
+[Service24H2]
+DisplayName = %Description%
+ServiceBinary = %13%\BdgDriver.sys
+ServiceType = 2
+StartType = 3
+ErrorControl = 1
+LoadOrderGroup = "FSFilter Security Enhancer"
+Dependencies = FltMgr
+AddReg = Instances24H2
+
+[InstancesLegacy]
+HKR,"Instances","DefaultInstance",0x00000000,%Instance%
+HKR,"Instances\"%Instance%,"Altitude",0x00000000,"@BDG_TEST_ALTITUDE@"
+HKR,"Instances\"%Instance%,"Flags",0x00010001,0
+[Instances24H2]
+HKR,"Parameters\Instances","DefaultInstance",0x00000000,%Instance%
+HKR,"Parameters\Instances\"%Instance%,"Altitude",0x00000000,"@BDG_TEST_ALTITUDE@"
+HKR,"Parameters\Instances\"%Instance%,"Flags",0x00010001,0
+
+[Strings]
+Provider = "Browser Data Guard contributors"
+Description = "BDG synthetic lab minifilter (unvalidated PoC)"
+Instance = "BDG Lab Instance"
+Disk = "BDG VM test package"

@@ -1,0 +1,13 @@
+/out/
+/build/
+/.vs/
+*.user
+*.suo
+*.sys
+*.pdb
+*.cat
+*.cer
+*.pfx
+*.jsonl
+/notifier/bin/
+/notifier/obj/
